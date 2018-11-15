@@ -11,6 +11,7 @@ class Process{
         int io;
 
     Process();
+    Process(int pid, int bst, int arr, int pri, int ddline, int io);
     ~Process();
 
 
