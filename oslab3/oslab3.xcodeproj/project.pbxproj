@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B304CE91219DB75A006A2759 /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B304CE8F219DB75A006A2759 /* process.cpp */; };
-		B304CE92219DB75A006A2759 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B304CE90219DB75A006A2759 /* main.cpp */; };
+		B32370B221B33562006E0B6C /* mfqs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B32370B121B33562006E0B6C /* mfqs.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +30,7 @@
 		B304CE90219DB75A006A2759 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../main.cpp; sourceTree = "<group>"; };
 		B304CE93219DB76D006A2759 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		B304CE94219DB7AF006A2759 /* sample_input */ = {isa = PBXFileReference; lastKnownFileType = text; name = sample_input; path = ../../sample_input; sourceTree = "<group>"; };
+		B32370B121B33562006E0B6C /* mfqs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mfqs.cpp; path = ../../mfqs.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +63,7 @@
 		B304CE86219DB749006A2759 /* oslab3 */ = {
 			isa = PBXGroup;
 			children = (
+				B32370B121B33562006E0B6C /* mfqs.cpp */,
 				B304CE90219DB75A006A2759 /* main.cpp */,
 				B304CE8F219DB75A006A2759 /* process.cpp */,
 				B304CE8E219DB75A006A2759 /* process.hpp */,
@@ -128,7 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B304CE91219DB75A006A2759 /* process.cpp in Sources */,
-				B304CE92219DB75A006A2759 /* main.cpp in Sources */,
+				B32370B221B33562006E0B6C /* mfqs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
