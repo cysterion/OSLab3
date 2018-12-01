@@ -9,10 +9,13 @@ int main(int argc, char* argv[]) {
     //set up queues
 		std::priority_queue<Process, std::vector<Process>, std::greater<Process>> readyQueue;
     Process* p = new Process(1,2,3,4,5,6);
-    readyQueue.push(*p);
+		Process* p2 = new Process(2,3,2,5,6,7);
 	
-	Process p2 = readyQueue.top();
-	p2.print();
+    readyQueue.push(*p);
+		readyQueue.push(*p2);
+	
+		Process p3 = readyQueue.top();
+		p3.print();
 	
     //read in file and create processes
 

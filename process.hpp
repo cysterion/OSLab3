@@ -17,12 +17,11 @@ class Process{
     ~Process();
 	
 		friend bool operator<(const Process& a, const Process& b) {
-			return b.arr < a.arr;
-		}
-		friend bool operator>(const Process& a, const Process& b) {
 			return b.arr > a.arr;
 		}
-//	friend bool operator>(const Process& a, const Process& b);
+		friend bool operator>(const Process& a, const Process& b) {
+			return b.arr < a.arr;
+		}
 
 };
 
