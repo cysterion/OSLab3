@@ -2,6 +2,7 @@
 #include "process.hpp"
 #include <queue>
 #include <fstream>
+#include <math.h>
 
 using namespace std;
 
@@ -35,7 +36,7 @@ int main(int argc, char* argv[]) {
 	if (file.is_open()) {
 		Process* p = new Process();
 
-		while (file >> p->pid >> p->arr >> p->burst >> p->pri >> p->deadline >> p->io) {
+		while (file >> p->pid >> p->burst >> p->arr >> p->pri >> p->deadline >> p->io) {
 //			p->print();
 			readyQueue.push(*p);
 		}
@@ -49,47 +50,93 @@ int main(int argc, char* argv[]) {
 	int sourceQ = 0;
 	bool running = false;
 	Process runningProcess;
+	bool processessLeft = true;
 	
-	while(!readyQueue.empty()) {
+	while(!readyQueue.empty() || processessLeft) {
 		
 		Process p = readyQueue.top();
-		while (p.arr == tick){
-			readyQueue.pop();
-			queues[0].push_back(p);
+		
+		while (p.arr == tick && !readyQueue.empty()){
+			cout << "Added: " << p.pid << " to Q: 0" << endl;
 			
-			p = readyQueue.top();
+			queues[0].push_back(p);
+			readyQueue.pop();
+			
+			if (!readyQueue.empty()) {
+				p = readyQueue.top();
+			}
 		}
 		
 		if(running) {
 			runningProcess.burst -= 1;
+			runtime++;
+			cout << "Currently Running: " << runningProcess.pid << endl;
 			
-			if(runtime == timeQuantum) {
-				queues[sourceQ+1].push_back(runningProcess);
+			if(runningProcess.burst == 0) {
 				running = false;
+				runtime = 0;
+				cout << "Process: " << runningProcess.pid << " finished" << endl;
+				
+			} else {
+				if((runtime >= timeQuantum) && (sourceQ < (numQ-1))) {
+					cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+1 << endl;
+					queues[sourceQ+1].push_back(runningProcess);
+					runtime = 0;
+					running = false;
+				}
+				
+				if ((runtime >= timeQuantum) && (sourceQ == (numQ-1))) {
+					queues[numQ-1].push_back(runningProcess);
+					runtime = 0;
+					running = false;
+				}
 			}
 			
 		} else {
 			int i = 0;
 			deque<Process> currQ = queues[i];
-			while(currQ.empty()) {
-				currQ = queues[i++];
+			while(currQ.empty() && i < numQ) {
+				currQ = queues[++i];
 			}
 			
-			runningProcess = queues[i].front();
-			queues[i].pop_front();
-			
-			sourceQ = 0;
-			timeQuantum = tq;
-			running = true;
-			
-			runtime++;
-			runningProcess.burst -= 1;
+			if (i < numQ) {
+				runningProcess = queues[i].front();
+				queues[i].pop_front();
+				
+				sourceQ = i;
+				if(sourceQ == (numQ-1)) {
+					timeQuantum = 1;
+				} else {
+					timeQuantum = tq * pow(2, i);
+				}
+				running = true;
+				
+//				runtime++;
+//				runningProcess.burst -= 1;
+//				cout << "Currently Running: " << runningProcess.pid << endl;
+			}
 		}
 	
-		
-		
-		
+//		if (running) {
+//			cout << "Currently Running: " << runningProcess.pid << endl;
+//		}
+//		cout << tick << endl;
 		tick++;
+		if (readyQueue.empty()) {
+			
+			for(int i = 0; i < numQ; i++) {
+				if (!queues[i].empty()) {
+					processessLeft = true;
+					break;
+					
+				} else {
+					if (runningProcess.burst == 0) {
+						processessLeft = false;
+					}
+				}
+			}
+			
+		}
 	}
 	
 	return 0;
