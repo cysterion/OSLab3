@@ -16,18 +16,17 @@ int main(int argc, char* argv[]) {
     int tq;
     cin >> tq;
     //set up queues
+	
 
 	std::priority_queue<Process, std::vector<Process>, std::greater<Process>> readyQueue;
-//    Process* p = new Process(1,2,3,4,5,6);
-//		Process* p2 = new Process(2,3,2,5,6,7);
-//    readyQueue.push(*p);
-
-   std::priority_queue<Process, std::vector<Process>, std::greater<Process>> queues [numQ];
-    for(int i = 0; i < numQ; i++){
-        std::priority_queue<Process, std::vector<Process>, std::greater<Process>> tempQ;
-        queues[i] = tempQ;
-    }
-
+	
+	std::priority_queue<Process, std::vector<Process>, std::greater<Process>> queues [numQ];
+	for(int i = 0; i < numQ; i++){
+		std::priority_queue<Process, std::vector<Process>, std::greater<Process>> tempQ;
+		queues[i] = tempQ;
+	}
+	
+	//read in file and create processes
 	ifstream file;
 //	cout << argv[1];
 	file.open (argv[1]);
@@ -43,14 +42,25 @@ int main(int argc, char* argv[]) {
 		file.close();
 	}
 
-	Process t = readyQueue.top();
-	t.print();
-
-    //read in file and create processes
-
-    //do the scheduler
-
-
-    return 0;
+	//do the scheduler
+	unsigned int tick = 0;
+	int timeQuantum = 0;
+	
+	while(!readyQueue.empty()) {
+		Process p = readyQueue.top();
+		while (p.arr == tick){
+			readyQueue.pop();
+			queues[0].push(p);
+			
+			p = readyQueue.top();
+		}
+	
+		
+		
+		
+		tick++;
+	}
+	
+	return 0;
 }
 
