@@ -3,6 +3,7 @@
 #include <queue>
 #include <fstream>
 #include <math.h>
+#include <deque>
 
 using namespace std;
 
@@ -16,6 +17,10 @@ int main(int argc, char* argv[]) {
     cout << "Enter Queue 1 Time Quantum\n";
     int tq;
     cin >> tq;
+	
+	cout << "Enter Aging interval\n";
+	int aInt;
+	cin >> aInt;
     //set up queues
 	
 
@@ -121,7 +126,6 @@ int main(int argc, char* argv[]) {
 //			cout << "Currently Running: " << runningProcess.pid << endl;
 //		}
 //		cout << tick << endl;
-		tick++;
 		if (readyQueue.empty()) {
 			
 			for(int i = 0; i < numQ; i++) {
@@ -137,6 +141,33 @@ int main(int argc, char* argv[]) {
 			}
 			
 		}
+		
+//		deque<Process> aq = queues[numQ-1];
+//		for (int i = 0; i < aq.size(); i++) {
+//			aq[i].age += 1;
+			
+//			if (aq[i].age >= aInt) {
+//				cout << "Aged up: " << aq[i].pid << endl;
+//				aq[i].age = 0;
+//				queues[numQ-2].push_back(aq[i]);
+//				queues[numQ-1].erase(aq.begin()+i);
+//			}
+			
+//		}
+		
+//		for (auto it = queues[numQ-1].begin(); it != queues[numQ-1].end(); ++it) {
+//			cout << *it;
+//			it->age += 1;j
+//			if (it->age >= aInt) {
+//				cout << "Aged up: " << it->pid << endl;
+////				it->age = 0;
+//				queues[numQ-2].push_back(*it);
+//				queues[numQ-1].erase(it);
+//			}
+//		}
+		
+		
+		tick++;
 	}
 	
 	return 0;

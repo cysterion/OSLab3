@@ -14,6 +14,7 @@ Process::Process(int pid, int bst, int arr, int pri, int ddline, int io) {
 	this->pri = pri;
 	this->deadline = ddline;
 	this->io = io;
+	this->age = 0;
 }
 
 Process::~Process() {
