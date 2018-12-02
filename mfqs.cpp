@@ -18,11 +18,11 @@ int main(int argc, char* argv[]) {
     //set up queues
 	
 
-	std::priority_queue<Process, std::vector<Process>, std::greater<Process>> readyQueue;
+	priority_queue<Process, vector<Process>, greater<Process>> readyQueue;
 	
-	std::priority_queue<Process, std::vector<Process>, std::greater<Process>> queues [numQ];
+	deque<Process> queues [numQ];
 	for(int i = 0; i < numQ; i++){
-		std::priority_queue<Process, std::vector<Process>, std::greater<Process>> tempQ;
+		deque<Process> tempQ;
 		queues[i] = tempQ;
 	}
 	
@@ -45,14 +45,45 @@ int main(int argc, char* argv[]) {
 	//do the scheduler
 	unsigned int tick = 0;
 	int timeQuantum = 0;
+	int runtime = 0;
+	int sourceQ = 0;
+	bool running = false;
+	Process runningProcess;
 	
 	while(!readyQueue.empty()) {
+		
 		Process p = readyQueue.top();
 		while (p.arr == tick){
 			readyQueue.pop();
-			queues[0].push(p);
+			queues[0].push_back(p);
 			
 			p = readyQueue.top();
+		}
+		
+		if(running) {
+			runningProcess.burst -= 1;
+			
+			if(runtime == timeQuantum) {
+				queues[sourceQ+1].push_back(runningProcess);
+				running = false;
+			}
+			
+		} else {
+			int i = 0;
+			deque<Process> currQ = queues[i];
+			while(currQ.empty()) {
+				currQ = queues[i++];
+			}
+			
+			runningProcess = queues[i].front();
+			queues[i].pop_front();
+			
+			sourceQ = 0;
+			timeQuantum = tq;
+			running = true;
+			
+			runtime++;
+			runningProcess.burst -= 1;
 		}
 	
 		
