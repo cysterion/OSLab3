@@ -68,7 +68,9 @@ int main(int argc, char* argv[]) {
 					ints[i] = t;
 					
 				} catch (const std::invalid_argument& ia) {
+#ifdef DEBUG
 					std::cerr << "Invalid argument: " << ia.what() << '\n';
+#endif
 					valid = false;
 				}
 			}
@@ -92,7 +94,9 @@ int main(int argc, char* argv[]) {
 				
 				readyQueue.push(*p);
 			} else {
+#ifdef DEBUG
 				cout << "Invalid line: " << line << endl;
+#endif
 			}
 			
 		}
@@ -117,7 +121,9 @@ int main(int argc, char* argv[]) {
 		Process p = readyQueue.top();
 
 		while (p.arr == tick && !readyQueue.empty()){
+#ifdef DEBUG
 			cout << "Added: " << p.pid << " to Q: 0" << endl;
+#endif
 
 			queues[0].push_back(p);
 			readyQueue.pop();
@@ -130,16 +136,22 @@ int main(int argc, char* argv[]) {
 		if(running) {
 			runningProcess.burst -= 1;
 			runtime++;
+#ifdef DEBUG
 			cout << "Currently Running: " << runningProcess.pid << endl;
+#endif
 
 			if(runningProcess.burst == 0) {
 				running = false;
 				runtime = 0;
+#ifdef DEBUG
 				cout << "Process: " << runningProcess.pid << " finished" << endl;
+#endif
 				turnTime += tick - runningProcess.arr;
 			} else {
 				if((runtime >= timeQuantum) && (sourceQ < (numQ-1))) {
+#ifdef DEBUG
 					cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+1 << endl;
+#endif
 					queues[sourceQ+1].push_back(runningProcess);
 					runtime = 0;
 					running = false;
