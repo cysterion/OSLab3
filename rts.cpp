@@ -4,6 +4,7 @@
 #include <fstream>
 #include <math.h>
 #include <deque>
+#include <cstring>
 #include <cctype>
 
 using namespace std;
