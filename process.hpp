@@ -16,7 +16,6 @@ class Process{
     Process();
     Process(int pid, int bst, int arr, int pri, int ddline, int io);
     ~Process();
-	bool validate();
 
 		friend bool operator<(const Process& a, const Process& b) {
 			return a.deadline > b.deadline;
