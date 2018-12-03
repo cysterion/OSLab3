@@ -100,8 +100,8 @@ int main(int argc, char* argv[]) {
 	}
 
 	int numProc = readyQueue.size();
-	int waitTime = 0;
-	int turnTime = 0;
+	unsigned int waitTime = 0;
+	unsigned int turnTime = 0;
 
 	//do the scheduler
 	unsigned int tick = 0;

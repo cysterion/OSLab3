@@ -89,8 +89,8 @@ int main(int argc, char* argv[]) {
 	//do the scheduler
 	unsigned int tick = 0;
 	Process runningProcess;
-	int turnTime = 0;
-	int waitTime = 0;
+	unsigned int turnTime = 0;
+	unsigned int waitTime = 0;
 	int succeedProc = 0;
 	int numProc = readyQueue.size();
 	
