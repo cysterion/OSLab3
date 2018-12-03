@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B304CE91219DB75A006A2759 /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B304CE8F219DB75A006A2759 /* process.cpp */; };
-		B3D87FB321B4C3F60084B013 /* rts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D87FB221B4C3F60084B013 /* rts.cpp */; };
+		B3D87FBA21B5DF370084B013 /* mfqs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B32370B121B33562006E0B6C /* mfqs.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -131,8 +131,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3D87FB321B4C3F60084B013 /* rts.cpp in Sources */,
 				B304CE91219DB75A006A2759 /* process.cpp in Sources */,
+				B3D87FBA21B5DF370084B013 /* mfqs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +254,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = "DDEBUG=0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -262,6 +263,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = "DDEBUG=0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

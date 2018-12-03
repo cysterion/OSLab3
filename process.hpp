@@ -9,7 +9,7 @@ class Process{
         int pri;
         int deadline;
         int io;
-        int age;
+        int tickArrived;
         int start;
 	
 		void print();

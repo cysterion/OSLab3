@@ -16,6 +16,10 @@ int main(int argc, char* argv[]) {
 
     int numQ;
     cin >> numQ;
+	if (numQ <= 1 || numQ > 5) {
+		exit(-1234);
+	}
+	
     cout << "Enter Queue 1 Time Quantum\n";
     int tq;
     cin >> tq;
@@ -152,6 +156,9 @@ int main(int argc, char* argv[]) {
 #ifdef DEBUG
 					cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+1 << endl;
 #endif
+					if((sourceQ+1) == (numQ -1)) {
+						runningProcess.tickArrived = tick;
+					}
 					queues[sourceQ+1].push_back(runningProcess);
 					runtime = 0;
 					running = false;
@@ -210,31 +217,17 @@ int main(int argc, char* argv[]) {
 			}
 
 		}
-
-//		deque<Process> aq = queues[numQ-1];
-//		for (int i = 0; i < aq.size(); i++) {
-//			aq[i].age += 1;
-
-//			if (aq[i].age >= aInt) {
-//				cout << "Aged up: " << aq[i].pid << endl;
-//				aq[i].age = 0;
-//				queues[numQ-2].push_back(aq[i]);
-//				queues[numQ-1].erase(aq.begin()+i);
-//			}
-
-//		}
-
-//		for (auto it = queues[numQ-1].begin(); it != queues[numQ-1].end(); ++it) {
-//			cout << *it;
-//			it->age += 1;j
-//			if (it->age >= aInt) {
-//				cout << "Aged up: " << it->pid << endl;
-////				it->age = 0;
-//				queues[numQ-2].push_back(*it);
-//				queues[numQ-1].erase(it);
-//			}
-//		}
-
+		
+		if (!queues[numQ-1].empty()) {
+			Process ap = queues[numQ-1].front();
+			if (ap.tickArrived == (tick-aInt)) {
+				queues[numQ-2].push_back(ap);
+				queues[numQ-1].pop_front();
+//#ifdef DEBUG
+				cout << "Aged up: " << ap.pid << " to Q: " << numQ-2 << endl;
+//#endif
+			}
+		}
 
 		tick++;
 	}
