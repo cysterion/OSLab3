@@ -65,7 +65,9 @@ int main(int argc, char* argv[]) {
 					ints[i] = t;
 					
 				} catch (const std::invalid_argument& ia) {
+#ifdef DEBUG
 					std::cerr << "Invalid argument: " << ia.what() << '\n';
+#endif
 					valid = false;
 				}
 			}
@@ -89,7 +91,10 @@ int main(int argc, char* argv[]) {
 				
 				readyQueue.push(*p);
 			} else {
+				
+#ifdef DEBUG
 				cout << "Invalid line: " << line << endl;
+#endif
 			}
 		
 		}
@@ -108,8 +113,9 @@ int main(int argc, char* argv[]) {
 		
 		Process p = readyQueue.top();
 		while (p.arr == tick && !readyQueue.empty()){
+#ifdef DEBUG
 			cout << "Added: " << p.pid << " to Q" << endl;
-			
+#endif
 			queue.push(p);
 			readyQueue.pop();
 			
@@ -126,17 +132,23 @@ int main(int argc, char* argv[]) {
 			if (runningProcess.start == -1) {
 				runningProcess.start = tick;
 			}
+#ifdef DEBUG
 			cout << "Process " << runningProcess.pid << " is running 🏃‍♂️" << endl;
+#endif
 			
 			if (runningProcess.burst == 0) {
 				turnTime += tick - runningProcess.arr;
 				waitTime += runningProcess.start - runningProcess.arr;
 				succeedProc += 1;
+#ifdef DEBUG
 				cout << "Process " << runningProcess.pid << " completed" << endl;
+#endif
 				
 			} else {
 				if (runningProcess.deadline <= tick) {
+#ifdef DEBUG
 					cout << "Process " << runningProcess.pid << " failed to meet deadline" << endl;
+#endif
 					runningProcess.print();
 					cout << tick << endl;
 					
@@ -160,7 +172,9 @@ int main(int argc, char* argv[]) {
 				queue.push(temp);
 				
 			} else {
+#ifdef DEBUG
 				cout << "Process " << temp.pid << " failed to meet deadline" << endl;
+#endif
 				
 				if(type == 0){
 					deathByHardMode(turnTime, waitTime, numProc, succeedProc);
@@ -172,7 +186,10 @@ int main(int argc, char* argv[]) {
 			}
 			i++;
 		}
+		
+#ifdef DEBUG
 		cout << tick <<endl;
+#endif
 		tick++;
 	}
 	
