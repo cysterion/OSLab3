@@ -37,66 +37,69 @@ int main(int argc, char* argv[]) {
 //	cout << argv[1];
 	file.open (argv[1]);
 	string line;
+	string parts[6];
 
-	//		while (file >> p->pid >> p->burst >> p->arr >> p->pri >> p->deadline >> p->io) {
-	while (getline(file, line, '\n')) {
-		bool valid = true;
-		//			cout << line.c_str() << '\n';
-		
-		// split line into str[]
-		int i = 0;
-		char* l = strdup(line.c_str());
-		char *token = std::strtok(l, "\t");
-		
-		while (token != NULL) {
-			//				std::cout << token << '\n';
-			parts[i] = token;
-			i++;
-			token = std::strtok(NULL, "\t");
-		}
-		
-		//check if any elmns are !numerical
-		int ints[6];
-		for (int i = 0; i < 6; i++) {
-			try {
-				int t = stoi(parts[i]);
-				ints[i] = t;
-				
-			} catch (const std::invalid_argument& ia) {
-				std::cerr << "Invalid argument: " << ia.what() << '\n';
+	if (file.is_open()) {
+		Process* p = new Process();
+		//		while (file >> p->pid >> p->burst >> p->arr >> p->pri >> p->deadline >> p->io) {
+		while (getline(file, line, '\n')) {
+			bool valid = true;
+			//			cout << line.c_str() << '\n';
+			
+			// split line into str[]
+			int i = 0;
+			char* l = strdup(line.c_str());
+			char *token = std::strtok(l, "\t");
+			
+			while (token != NULL) {
+				//				std::cout << token << '\n';
+				parts[i] = token;
+				i++;
+				token = std::strtok(NULL, "\t");
+			}
+			
+			//check if any elmns are !numerical
+			int ints[6];
+			for (int i = 0; i < 6; i++) {
+				try {
+					int t = stoi(parts[i]);
+					ints[i] = t;
+					
+				} catch (const std::invalid_argument& ia) {
+					std::cerr << "Invalid argument: " << ia.what() << '\n';
+					valid = false;
+				}
+			}
+			
+			//todo:check for things that might break the scheduler
+			if (ints[0] < 0
+					|| ints[1] < 0
+					|| ints[2] < 0
+					|| ints[3] < 0){
 				valid = false;
 			}
-		}
-		
-		//todo:check for things that might break the scheduler
-		if (ints[0] < 0
-				|| ints[1] < 0
-				|| ints[2] < 0
-				|| ints[3] < 0){
-			valid = false;
-		}
-		
-		if(valid) {
-			//create the process
-			p->pid = ints[0];
-			p->burst = ints[1];
-			p->arr = ints[2];
-			p->pri = ints[3];
-			p->deadline = ints[4];
-			p->io = ints[5];
 			
-			readyQueue.push(*p);
-		} else {
-			cout << "Invalid line: " << line << endl;
+			if(valid) {
+				//create the process
+				p->pid = ints[0];
+				p->burst = ints[1];
+				p->arr = ints[2];
+				p->pri = ints[3];
+				p->deadline = ints[4];
+				p->io = ints[5];
+				
+				readyQueue.push(*p);
+			} else {
+				cout << "Invalid line: " << line << endl;
+			}
+			
 		}
-		
+		file.close();
 	}
-	file.close();
-}
 
-    int numProc = readyQueue.size();
-    int waitTime = 0;
-    int turnTime = 0;
+	int numProc = readyQueue.size();
+	int waitTime = 0;
+	int turnTime = 0;
 
 	//do the scheduler
 	unsigned int tick = 0;
