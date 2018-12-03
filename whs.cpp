@@ -183,8 +183,8 @@ int main(int argc, char* argv[]) {
 							runtime = 0;
 						}
 					}
-			
-			
+				}
+			}
 		} else {
 			int i = 0;
 			deque<Process> currQ = queues[i];
