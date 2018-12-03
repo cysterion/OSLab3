@@ -16,6 +16,7 @@ Process::Process(int pid, int bst, int arr, int pri, int ddline, int io) {
 	this->io = io;
 	this->tickArrived = 0;
 	this->start = -1;
+	this->currentPri = pri;
 }
 
 Process::~Process() {

@@ -11,6 +11,7 @@ class Process{
         int io;
         int tickArrived;
         int start;
+        int currentPri;
 	
 		void print();
 

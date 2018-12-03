@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B304CE91219DB75A006A2759 /* process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B304CE8F219DB75A006A2759 /* process.cpp */; };
-		B3D87FBA21B5DF370084B013 /* mfqs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B32370B121B33562006E0B6C /* mfqs.cpp */; };
+		B3D87FBC21B5E7500084B013 /* whs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D87FBB21B5E7500084B013 /* whs.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,6 +32,7 @@
 		B304CE94219DB7AF006A2759 /* sample_input */ = {isa = PBXFileReference; lastKnownFileType = text; name = sample_input; path = ../../sample_input; sourceTree = "<group>"; };
 		B32370B121B33562006E0B6C /* mfqs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mfqs.cpp; path = ../../mfqs.cpp; sourceTree = "<group>"; };
 		B3D87FB221B4C3F60084B013 /* rts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rts.cpp; path = ../../rts.cpp; sourceTree = "<group>"; };
+		B3D87FBB21B5E7500084B013 /* whs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = whs.cpp; path = ../../whs.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +65,7 @@
 		B304CE86219DB749006A2759 /* oslab3 */ = {
 			isa = PBXGroup;
 			children = (
+				B3D87FBB21B5E7500084B013 /* whs.cpp */,
 				B3D87FB221B4C3F60084B013 /* rts.cpp */,
 				B32370B121B33562006E0B6C /* mfqs.cpp */,
 				B304CE90219DB75A006A2759 /* main.cpp */,
@@ -131,8 +133,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3D87FBC21B5E7500084B013 /* whs.cpp in Sources */,
 				B304CE91219DB75A006A2759 /* process.cpp in Sources */,
-				B3D87FBA21B5DF370084B013 /* mfqs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,7 +256,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				GCC_PREPROCESSOR_DEFINITIONS = "DDEBUG=1";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "DDEBUG=0";
+				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -263,7 +268,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				GCC_PREPROCESSOR_DEFINITIONS = "DDEBUG=1";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
