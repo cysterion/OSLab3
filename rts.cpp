@@ -28,8 +28,9 @@ int main(int argc, char* argv[]) {
 		Process* p = new Process();
 		
 		while (file >> p->pid >> p->burst >> p->arr >> p->pri >> p->deadline >> p->io) {
-			//			p->print();
-			readyQueue.push(*p);
+			if (p->validate()) {
+				readyQueue.push(*p);
+			}
 		}
 		file.close();
 	}
@@ -59,16 +60,18 @@ int main(int argc, char* argv[]) {
 			runningProcess.burst -= 1;
 			cout << "Process " << runningProcess.pid << " is running 🏃‍♂️" << endl;
 			
-			if (runningProcess.deadline <= tick) {
-				cout << "Process " << runningProcess.pid << " failed to meet deadline" << endl;
-				
-				if(type == 0){
-					exit(-1);
-				}
+			if (runningProcess.burst == 0) {
+				cout << "Process " << runningProcess.pid << " completed" << endl;
 				
 			} else {
-				if (runningProcess.burst == 0) {
-					cout << "Process " << runningProcess.pid << " completed" << endl;
+				if (runningProcess.deadline <= tick) {
+					cout << "Process " << runningProcess.pid << " failed to meet deadline" << endl;
+					runningProcess.print();
+					cout << tick << endl;
+					
+					if(type == 0){
+						exit(-1);
+					}
 					
 				} else {
 					queue.push(runningProcess);
@@ -76,6 +79,29 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		
+		int i = 0;
+		bool end = false;
+		while(!end) {
+			Process temp = queue.top();
+			queue.pop();
+			
+			if (!((temp.deadline - tick) < temp.burst)) {
+				queue.push(temp);
+				
+			} else {
+				cout << "Process " << temp.pid << " failed to meet deadline" << endl;
+				
+				if(type == 0){
+					exit(-1);
+				}
+			}
+			
+			if (i >= queue.size()) {
+				end = true;
+			}
+			i++;
+		}
+		cout << tick <<endl;
 		tick++;
 	}
 	
