@@ -9,6 +9,16 @@
 
 using namespace std;
 
+void deathByHardMode(unsigned int turnTime, unsigned int waitTime, int numProc, int succeedProc) {
+	turnTime = turnTime / succeedProc;
+	waitTime = waitTime / numProc;
+	cout << "Number of Processes: " << numProc << endl;
+	cout << "Succeeded Proccesses: " << succeedProc << endl;
+	cout << "Average Turn Time: " << turnTime << endl;
+	cout << "Average Wait Time: " << waitTime << endl;
+	exit(-32);
+}
+
 int main(int argc, char* argv[]) {
 	
 	
@@ -131,7 +141,7 @@ int main(int argc, char* argv[]) {
 					cout << tick << endl;
 					
 					if(type == 0){
-						exit(-1);
+						deathByHardMode(turnTime, waitTime, numProc, succeedProc);
 					}
 					
 				} else {
@@ -153,7 +163,7 @@ int main(int argc, char* argv[]) {
 				cout << "Process " << temp.pid << " failed to meet deadline" << endl;
 				
 				if(type == 0){
-					exit(-1);
+					deathByHardMode(turnTime, waitTime, numProc, succeedProc);
 				}
 			}
 			
@@ -168,10 +178,10 @@ int main(int argc, char* argv[]) {
 	
 	turnTime = turnTime / succeedProc;
 	waitTime = waitTime / numProc;
-	cout << "Number of Processess: " << numProc << endl;
+	cout << "Number of Processes: " << numProc << endl;
+	cout << "Succeeded Proccesses: " << succeedProc << endl;
 	cout << "Average Turn Time: " << turnTime << endl;
 	cout << "Average Wait Time: " << waitTime << endl;
 	
 	return 0;
 }
-
