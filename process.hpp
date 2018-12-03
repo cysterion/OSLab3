@@ -10,6 +10,7 @@ class Process{
         int deadline;
         int io;
         int age;
+        int start;
 	
 		void print();
 

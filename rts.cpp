@@ -88,6 +88,10 @@ int main(int argc, char* argv[]) {
 	//do the scheduler
 	unsigned int tick = 0;
 	Process runningProcess;
+	int turnTime = 0;
+	int waitTime = 0;
+	int succeedProc = 0;
+	int numProc = readyQueue.size();
 	
 	while(!readyQueue.empty() || !queue.empty()) {
 		
@@ -108,9 +112,15 @@ int main(int argc, char* argv[]) {
 			queue.pop();
 			
 			runningProcess.burst -= 1;
+			if (runningProcess.start == -1) {
+				runningProcess.start = tick;
+			}
 			cout << "Process " << runningProcess.pid << " is running 🏃‍♂️" << endl;
 			
 			if (runningProcess.burst == 0) {
+				turnTime += tick - runningProcess.arr;
+				waitTime += runningProcess.start - runningProcess.arr;
+				succeedProc += 1;
 				cout << "Process " << runningProcess.pid << " completed" << endl;
 				
 			} else {
@@ -154,6 +164,12 @@ int main(int argc, char* argv[]) {
 		cout << tick <<endl;
 		tick++;
 	}
+	
+	turnTime = turnTime / succeedProc;
+	waitTime = waitTime / numProc;
+	cout << "Number of Processess: " << numProc << endl;
+	cout << "Average Turn Time: " << turnTime << endl;
+	cout << "Average Wait Time: " << waitTime << endl;
 	
 	return 0;
 }
