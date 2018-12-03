@@ -17,21 +17,21 @@ int main(int argc, char* argv[]) {
     cout << "Enter Queue 1 Time Quantum\n";
     int tq;
     cin >> tq;
-	
+
 	cout << "Enter Aging interval\n";
 	int aInt;
 	cin >> aInt;
     //set up queues
-	
+
 
 	priority_queue<Process, vector<Process>, greater<Process>> readyQueue;
-	
+
 	deque<Process> queues [numQ];
 	for(int i = 0; i < numQ; i++){
 		deque<Process> tempQ;
 		queues[i] = tempQ;
 	}
-	
+
 	//read in file and create processes
 	ifstream file;
 //	cout << argv[1];
@@ -48,6 +48,10 @@ int main(int argc, char* argv[]) {
 		file.close();
 	}
 
+    int numProc = readyQueue.size();
+    int waitTime = 0;
+    int turnTime = 0;
+
 	//do the scheduler
 	unsigned int tick = 0;
 	int timeQuantum = 0;
@@ -56,32 +60,32 @@ int main(int argc, char* argv[]) {
 	bool running = false;
 	Process runningProcess;
 	bool processessLeft = true;
-	
+
 	while(!readyQueue.empty() || processessLeft) {
-		
+
 		Process p = readyQueue.top();
-		
+
 		while (p.arr == tick && !readyQueue.empty()){
 			cout << "Added: " << p.pid << " to Q: 0" << endl;
-			
+
 			queues[0].push_back(p);
 			readyQueue.pop();
-			
+
 			if (!readyQueue.empty()) {
 				p = readyQueue.top();
 			}
 		}
-		
+
 		if(running) {
 			runningProcess.burst -= 1;
 			runtime++;
 			cout << "Currently Running: " << runningProcess.pid << endl;
-			
+
 			if(runningProcess.burst == 0) {
 				running = false;
 				runtime = 0;
 				cout << "Process: " << runningProcess.pid << " finished" << endl;
-				
+				turnTime += tick - runningProcess.arr;
 			} else {
 				if((runtime >= timeQuantum) && (sourceQ < (numQ-1))) {
 					cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+1 << endl;
@@ -89,25 +93,27 @@ int main(int argc, char* argv[]) {
 					runtime = 0;
 					running = false;
 				}
-				
+
 				if ((runtime >= timeQuantum) && (sourceQ == (numQ-1))) {
 					queues[numQ-1].push_back(runningProcess);
 					runtime = 0;
 					running = false;
 				}
 			}
-			
+
 		} else {
 			int i = 0;
 			deque<Process> currQ = queues[i];
 			while(currQ.empty() && i < numQ) {
 				currQ = queues[++i];
 			}
-			
+
 			if (i < numQ) {
 				runningProcess = queues[i].front();
 				queues[i].pop_front();
-				
+			    if (i == 0){
+                    waitTime += tick - runningProcess.arr;
+                }
 				sourceQ = i;
 				if(sourceQ == (numQ-1)) {
 					timeQuantum = 1;
@@ -115,46 +121,46 @@ int main(int argc, char* argv[]) {
 					timeQuantum = tq * pow(2, i);
 				}
 				running = true;
-				
+
 //				runtime++;
 //				runningProcess.burst -= 1;
 //				cout << "Currently Running: " << runningProcess.pid << endl;
 			}
 		}
-	
+
 //		if (running) {
 //			cout << "Currently Running: " << runningProcess.pid << endl;
 //		}
 //		cout << tick << endl;
 		if (readyQueue.empty()) {
-			
+
 			for(int i = 0; i < numQ; i++) {
 				if (!queues[i].empty()) {
 					processessLeft = true;
 					break;
-					
+
 				} else {
 					if (runningProcess.burst == 0) {
 						processessLeft = false;
 					}
 				}
 			}
-			
+
 		}
-		
+
 //		deque<Process> aq = queues[numQ-1];
 //		for (int i = 0; i < aq.size(); i++) {
 //			aq[i].age += 1;
-			
+
 //			if (aq[i].age >= aInt) {
 //				cout << "Aged up: " << aq[i].pid << endl;
 //				aq[i].age = 0;
 //				queues[numQ-2].push_back(aq[i]);
 //				queues[numQ-1].erase(aq.begin()+i);
 //			}
-			
+
 //		}
-		
+
 //		for (auto it = queues[numQ-1].begin(); it != queues[numQ-1].end(); ++it) {
 //			cout << *it;
 //			it->age += 1;j
@@ -165,11 +171,15 @@ int main(int argc, char* argv[]) {
 //				queues[numQ-1].erase(it);
 //			}
 //		}
-		
-		
+
+
 		tick++;
 	}
-	
+    waitTime = waitTime / numProc;
+    turnTime = turnTime / numProc;
+	cout << "Average Wait Time is: " << waitTime << endl;
+    cout << "Average Turnaround Time is: " << turnTime << endl;
+    cout << "Total Processes: " << numProc << endl;
 	return 0;
 }
 
