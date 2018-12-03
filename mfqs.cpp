@@ -121,6 +121,9 @@ int main(int argc, char* argv[]) {
 	bool processessLeft = true;
 
 	while(!readyQueue.empty() || processessLeft) {
+#ifdef DEBUG
+		cout << "Tick: " << tick << endl;
+#endif
 
 		Process p = readyQueue.top();
 
@@ -191,17 +194,9 @@ int main(int argc, char* argv[]) {
 					timeQuantum = tq * pow(2, i);
 				}
 				running = true;
-
-//				runtime++;
-//				runningProcess.burst -= 1;
-//				cout << "Currently Running: " << runningProcess.pid << endl;
 			}
 		}
-
-//		if (running) {
-//			cout << "Currently Running: " << runningProcess.pid << endl;
-//		}
-//		cout << tick << endl;
+		
 		if (readyQueue.empty()) {
 
 			for(int i = 0; i < numQ; i++) {
@@ -223,9 +218,9 @@ int main(int argc, char* argv[]) {
 			if (ap.tickArrived == (tick-aInt)) {
 				queues[numQ-2].push_back(ap);
 				queues[numQ-1].pop_front();
-//#ifdef DEBUG
+#ifdef DEBUG
 				cout << "Aged up: " << ap.pid << " to Q: " << numQ-2 << endl;
-//#endif
+#endif
 			}
 		}
 
