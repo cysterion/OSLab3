@@ -150,6 +150,7 @@ int main(int argc, char* argv[]) {
 #endif
 				
 				turnTime += tick - runningProcess.arr;
+				waitTime += runningProcess.start - runningProcess.arr;
 			} else {
 				
 				if (runtime == timeQuantum-1 && (runningProcess.io != 0)) {
@@ -223,6 +224,10 @@ int main(int argc, char* argv[]) {
 //				}
 				timeQuantum = tq;
 				running = true;
+				
+				if (runningProcess.start == -1) {
+					runningProcess.start = tick;
+				}
 			}
 		}
 		
