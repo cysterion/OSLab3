@@ -16,7 +16,7 @@ make debug
 
 ## running
 
-agv[1] is used to specify a sample input file path
+argv[1] is used to specify a sample input file path
 
 
 run Multi-level Feedback Queue Scheduler (MFQS) with sample_input
