@@ -275,15 +275,17 @@ int main(int argc, char* argv[]) {
 		
 		for (int i = 90; i < 100; i++) {
 			deque<Process> q = queues[i];
-			Process ap = q.front();
-			
-			if (ap.tickArrived == (tick-aInt)) {
-				queues[ap.currentPri-10].push_back(ap);
-				q.pop_front();
+				if (!q.empty()) {
+					Process ap = queues[i].front();
+					
+					if (ap.tickArrived == (tick-aInt)) {
+						queues[ap.currentPri-10].push_back(ap);
+						q.pop_front();
 #ifdef DEBUG
-				cout << "Aged up: " << ap.pid << " to Q: " << numQ-2 << endl;
+						cout << "Aged up: " << ap.pid << " to Q: " << numQ-2 << endl;
 #endif
-			}
+					}
+				}
 		}
 		
 		if (readyQueue.empty()) {
