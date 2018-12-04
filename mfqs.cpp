@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
 			cout << "Added: " << p.pid << " to Q: 0" << endl;
 #endif
 
-			queues[0].push_back(p);
+			queues[0].push(p);
 			readyQueue.pop();
 
 			if (!readyQueue.empty()) {
@@ -166,13 +166,13 @@ int main(int argc, char* argv[]) {
 					if((sourceQ+1) == (numQ -1)) {
 						runningProcess.tickArrived = tick;
 					}
-					queues[sourceQ+1].push_back(runningProcess);
+					queues[sourceQ+1].push(runningProcess);
 					runtime = 0;
 					running = false;
 				}
 
 				if ((runtime >= timeQuantum) && (sourceQ == (numQ-1))) {
-					queues[numQ-1].push_back(runningProcess);
+					queues[numQ-1].push(runningProcess);
 					runtime = 0;
 					running = false;
 				}
@@ -180,14 +180,14 @@ int main(int argc, char* argv[]) {
 
 		} else {
 			int i = 0;
-			deque<Process> currQ = queues[i];
+			queue<Process> currQ = queues[i];
 			while(currQ.empty() && i < numQ) {
 				currQ = queues[++i];
 			}
 
 			if (i < numQ) {
 				runningProcess = queues[i].front();
-				queues[i].pop_front();
+				queues[i].pop();
 			    if (i == 0){
 						waitTime += tick - runningProcess.arr - runningProcess.initialBurst;
                 }
@@ -219,8 +219,8 @@ int main(int argc, char* argv[]) {
 		if (!queues[numQ-1].empty()) {
 			Process ap = queues[numQ-1].front();
 			if (ap.tickArrived == (tick-aInt)) {
-				queues[numQ-2].push_back(ap);
-				queues[numQ-1].pop_front();
+				queues[numQ-2].push(ap);
+				queues[numQ-1].pop();
 #ifdef DEBUG
 				cout << "Aged up: " << ap.pid << " to Q: " << numQ-2 << endl;
 #endif
