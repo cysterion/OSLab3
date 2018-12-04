@@ -6,6 +6,7 @@
 //#include <deque>
 #include <cstring>
 #include <cctype>
+#include <stdexcept>
 
 using namespace std;
 
