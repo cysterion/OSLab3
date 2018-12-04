@@ -115,9 +115,9 @@ int main(int argc, char* argv[]) {
 	int sourceQ = 0;
 	bool running = false;
 	Process runningProcess;
-//	bool processessLeft = true;
+	bool processessLeft = true;
 	
-	while(!readyQueue.empty()) {
+	while(!readyQueue.empty() || processessLeft) {
 		
 		Process p = readyQueue.top();
 		
@@ -151,36 +151,41 @@ int main(int argc, char* argv[]) {
 			} else {
 				
 				
+				
 				if((runtime >= timeQuantum)) {
-#ifdef DEBUG
-					cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+1 << endl;
-#endif
+
 					if ((sourceQ <= 49)) {
 						if ((sourceQ+tq) <= 49) {
 							queues[sourceQ+tq].push_back(runningProcess);
-							queues[sourceQ].pop_front();
 							running = false;
 							runtime = 0;
-							
+#ifdef DEBUG
+							cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+tq << endl;
+#endif
 						} else {
 							queues[49].push_back(runningProcess);
-							queues[sourceQ].pop_front();
 							running = false;
 							runtime = 0;
+#ifdef DEBUG
+							cout << "Demoted: " << runningProcess.pid << " to Q: " << 49 << endl;
+#endif
 						}
 						
 					} else {
 						if ((sourceQ+tq) <= 99) {
 							queues[sourceQ+tq].push_back(runningProcess);
-							queues[sourceQ].pop_front();
 							running = false;
 							runtime = 0;
-							
+#ifdef DEBUG
+							cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+tq << endl;
+#endif
 						} else {
 							queues[99].push_back(runningProcess);
-							queues[sourceQ].pop_front();
 							running = false;
 							runtime = 0;
+#ifdef DEBUG
+							cout << "Demoted: " << runningProcess.pid << " to Q: " << 99 << endl;
+#endif
 						}
 					}
 				}
@@ -208,6 +213,21 @@ int main(int argc, char* argv[]) {
 //				}
 				timeQuantum = tq;
 				running = true;
+			}
+		}
+		
+		if (readyQueue.empty()) {
+			
+			for(int i = 0; i < numQ; i++) {
+				if (!queues[i].empty()) {
+					processessLeft = true;
+					break;
+					
+				} else {
+					if (runningProcess.burst == 0) {
+						processessLeft = false;
+					}
+				}
 			}
 		}
 		
