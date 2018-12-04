@@ -102,10 +102,10 @@ int main(int argc, char* argv[]) {
 	}
 	
 	//do the scheduler
-	unsigned int tick = 0;
+	unsigned long long tick = 0;
 	Process runningProcess;
-	unsigned int turnTime = 0;
-	unsigned int waitTime = 0;
+	unsigned long long turnTime = 0;
+	unsigned long long waitTime = 0;
 	int succeedProc = 0;
 	int numProc = readyQueue.size();
 	
@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
 			
 			if (runningProcess.burst == 0) {
 				turnTime += tick - runningProcess.arr;
-				waitTime += runningProcess.start - runningProcess.arr;
+				waitTime += tick - runningProcess.arr - runningProcess.initialBurst;
 				succeedProc += 1;
 #ifdef DEBUG
 				cout << "Process " << runningProcess.pid << " completed" << endl;

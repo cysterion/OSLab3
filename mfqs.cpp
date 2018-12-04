@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
 				runningProcess = queues[i].front();
 				queues[i].pop_front();
 			    if (i == 0){
-                    waitTime += tick - runningProcess.arr;
+						waitTime += tick - runningProcess.arr - runningProcess.initialBurst;
                 }
 				sourceQ = i;
 				if(sourceQ == (numQ-1)) {

@@ -105,13 +105,13 @@ int main(int argc, char* argv[]) {
 	
 	
 	int numProc = readyQueue.size();
-	unsigned int waitTime = 0;
-	unsigned int turnTime = 0;
+	unsigned long long waitTime = 0;
+	unsigned long long turnTime = 0;
 	
 	//do the scheduler
 	
 	priority_queue <Process, vector<Process>, Process::IOCompare> IOQueue;
-	unsigned int tick = 0;
+	unsigned long long tick = 0;
 	int timeQuantum = 0;
 	int runtime = 0;
 	int sourceQ = 0;
@@ -150,12 +150,22 @@ int main(int argc, char* argv[]) {
 #endif
 				
 				turnTime += tick - runningProcess.arr;
-				waitTime += runningProcess.start - runningProcess.arr;
+				waitTime += tick - runningProcess.arr - runningProcess.initialBurst - runningProcess.io;
 			} else {
 				
 				if (runtime == timeQuantum-1 && (runningProcess.io != 0)) {
-					runningProcess.currentPri = runningProcess.pri + runningProcess.io;
+					runningProcess.currentPri = runningProcess.pri - runningProcess.io;
+					
+					if (runningProcess.currentPri <= 0) {
+						runningProcess.currentPri = 0;
+					} else {
+						if (runningProcess.pri >= 50 && runningProcess.currentPri <= 49) {
+							runningProcess.currentPri = 50;
+						}
+					}
+					
 					runningProcess.ioFinish = tick + runningProcess.io;
+					
 					IOQueue.push(runningProcess);
 					runtime = 0;
 #ifdef DEBUG
@@ -164,39 +174,57 @@ int main(int argc, char* argv[]) {
 				}
 				
 				if((runtime >= timeQuantum)) {
-
-					if ((sourceQ <= 49)) {
-						if ((sourceQ+tq) <= 49) {
-							queues[sourceQ+tq].push_back(runningProcess);
-							running = false;
-							runtime = 0;
+					if ((sourceQ+tq) > runningProcess.pri) {
+						runningProcess.tickArrived = 0;
+						runningProcess.currentPri = runningProcess.pri;
+						queues[runningProcess.pri].push_back(runningProcess);
+						running = false;
+						runtime = 0;
 #ifdef DEBUG
-							cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+tq << endl;
+						cout << "Demoted: " << runningProcess.pid << " to Q: " << runningProcess.pri << endl;
 #endif
-						} else {
-							queues[49].push_back(runningProcess);
-							running = false;
-							runtime = 0;
-#ifdef DEBUG
-							cout << "Demoted: " << runningProcess.pid << " to Q: " << 49 << endl;
-#endif
-						}
-						
 					} else {
-						if ((sourceQ+tq) <= 99) {
-							queues[sourceQ+tq].push_back(runningProcess);
-							running = false;
-							runtime = 0;
-#ifdef DEBUG
-							cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+tq << endl;
-#endif
+						if ((sourceQ <= 49)) {
+							if ((sourceQ+tq) <= 49) {
+								runningProcess.tickArrived = 0;
+								runningProcess.currentPri = sourceQ+tq;
+								queues[sourceQ+tq].push_back(runningProcess);
+								running = false;
+								runtime = 0;
+		#ifdef DEBUG
+								cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+tq << endl;
+		#endif
+							} else {
+								runningProcess.tickArrived = 0;
+								runningProcess.currentPri = 49;
+								queues[49].push_back(runningProcess);
+								running = false;
+								runtime = 0;
+		#ifdef DEBUG
+								cout << "Demoted: " << runningProcess.pid << " to Q: " << 49 << endl;
+		#endif
+							}
+							
 						} else {
-							queues[99].push_back(runningProcess);
-							running = false;
-							runtime = 0;
-#ifdef DEBUG
-							cout << "Demoted: " << runningProcess.pid << " to Q: " << 99 << endl;
-#endif
+							if ((sourceQ+tq) <= 99) {
+								runningProcess.tickArrived = 0;
+								runningProcess.currentPri = sourceQ+tq;
+								queues[sourceQ+tq].push_back(runningProcess);
+								running = false;
+								runtime = 0;
+		#ifdef DEBUG
+								cout << "Demoted: " << runningProcess.pid << " to Q: " << sourceQ+tq << endl;
+		#endif
+							} else {
+								runningProcess.tickArrived = 0;
+								runningProcess.currentPri = 99;
+								queues[99].push_back(runningProcess);
+								running = false;
+								runtime = 0;
+		#ifdef DEBUG
+								cout << "Demoted: " << runningProcess.pid << " to Q: " << 99 << endl;
+		#endif
+							}
 						}
 					}
 				}
@@ -245,6 +273,18 @@ int main(int argc, char* argv[]) {
 			
 		}
 		
+		for (int i = 90; i < 100; i++) {
+			deque<Process> q = queues[i];
+			Process ap = q.front();
+			
+			if (ap.tickArrived == (tick-aInt)) {
+				queues[ap.currentPri-10].push_back(ap);
+				q.pop_front();
+#ifdef DEBUG
+				cout << "Aged up: " << ap.pid << " to Q: " << numQ-2 << endl;
+#endif
+			}
+		}
 		
 		if (readyQueue.empty()) {
 			
