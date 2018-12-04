@@ -13,7 +13,7 @@ class Process{
         int start;
         int currentPri;
 				int ioFinish;
-	int initialBurst;
+				int initialBurst;
 	
 		void print();
 

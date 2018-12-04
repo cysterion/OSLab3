@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void deathByHardMode(unsigned int turnTime, unsigned int waitTime, int numProc, int succeedProc) {
+void deathByHardMode(unsigned long long turnTime, unsigned long long waitTime, int numProc, int succeedProc) {
 //	turnTime = turnTime / succeedProc;
 //	waitTime = waitTime / numProc;
 	cout << "Number of Processes: " << numProc << endl;
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	cout << "Hard (0) or Soft (1)\n";
 	int type;
 	cin >> type;
-	
+
 	priority_queue<Process, vector<Process>, Process::ArrCompare> readyQueue;
 	
 	priority_queue<Process, vector<Process>, Process::RTSCompare> queue;
@@ -38,8 +38,8 @@ int main(int argc, char* argv[]) {
 	string parts[6];
 	
 	if (file.is_open()) {
-		Process* p = new Process();
-		
+		Process p;
+
 //		while (file >> p->pid >> p->burst >> p->arr >> p->pri >> p->deadline >> p->io) {
 		while (getline(file, line, '\n')) {
 			bool valid = true;
@@ -82,14 +82,16 @@ int main(int argc, char* argv[]) {
 			
 			if(valid) {
 				//create the process
-				p->pid = ints[0];
-				p->burst = ints[1];
-				p->arr = ints[2];
-				p->pri = ints[3];
-				p->deadline = ints[4];
-				p->io = ints[5];
+				p.pid = ints[0];
+				p.burst = ints[1];
+				p.arr = ints[2];
+				p.pri = ints[3];
+				p.deadline = ints[4];
+				p.io = ints[5];
 				
-				readyQueue.push(*p);
+				p.initialBurst = ints[1];
+				
+				readyQueue.push(p);
 			} else {
 				
 #ifdef DEBUG
@@ -137,8 +139,12 @@ int main(int argc, char* argv[]) {
 #endif
 			
 			if (runningProcess.burst == 0) {
-				turnTime += tick - runningProcess.arr;
-				waitTime += tick - runningProcess.arr - runningProcess.initialBurst;
+//				runningProcess.print();
+//				cout << tick << " " << runningProcess.arr << " " << runningProcess.initialBurst<< " " << runningProcess.burst << endl;
+//				cout << (tick - (runningProcess.arr - (runningProcess.initialBurst - runningProcess.burst))) << endl;
+
+				turnTime += (tick - runningProcess.arr);
+				waitTime += (tick - (runningProcess.arr - runningProcess.initialBurst));
 				succeedProc += 1;
 #ifdef DEBUG
 				cout << "Process " << runningProcess.pid << " completed" << endl;
@@ -149,10 +155,11 @@ int main(int argc, char* argv[]) {
 #ifdef DEBUG
 					cout << "Process " << runningProcess.pid << " failed to meet deadline" << endl;
 #endif
-					turnTime += tick - runningProcess.arr;
-					waitTime += tick - runningProcess.arr - runningProcess.burst;
+					turnTime += (tick - runningProcess.arr);
+					waitTime += (tick - (runningProcess.arr - (runningProcess.initialBurst - runningProcess.burst)));
 					
-					
+//					cout << (tick - (runningProcess.arr - (runningProcess.initialBurst - runningProcess.burst))) << endl;
+//					cout << tick << " " << runningProcess.arr << " " << runningProcess.initialBurst<< " " << runningProcess.burst << endl;
 					
 					if(type == 0){
 						deathByHardMode(turnTime, waitTime, numProc, succeedProc);
@@ -196,7 +203,10 @@ int main(int argc, char* argv[]) {
 	}
 	
 //	turnTime = turnTime / numProc;
-//	waitTime = waitTime / numProc;
+	//	waitTime = waitTime / numProc;
+//	cout << "Turn Time: " << ((float)turnTime) << endl;
+//	cout << "Wait Time: " << ((float)waitTime) << endl;
+
 	cout << "Number of Processes: " << numProc << endl;
 	cout << "Succeeded Proccesses: " << succeedProc << endl;
 	cout << "Average Turn Time: " << ((float)turnTime) / numProc << endl;

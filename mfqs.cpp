@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 	if (numQ <= 1 || numQ > 5) {
 		exit(-1234);
 	}
-	
+
     cout << "Enter Queue 1 Time Quantum\n";
     int tq;
     cin >> tq;
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	string parts[6];
 
 	if (file.is_open()) {
-		Process* p = new Process();
+		Process p;
 		//		while (file >> p->pid >> p->burst >> p->arr >> p->pri >> p->deadline >> p->io) {
 		while (getline(file, line, '\n')) {
 			bool valid = true;
@@ -93,14 +93,14 @@ int main(int argc, char* argv[]) {
 			
 			if(valid) {
 				//create the process
-				p->pid = ints[0];
-				p->burst = ints[1];
-				p->arr = ints[2];
-				p->pri = ints[3];
-				p->deadline = ints[4];
-				p->io = ints[5];
+				p.pid = ints[0];
+				p.burst = ints[1];
+				p.arr = ints[2];
+				p.pri = ints[3];
+				p.deadline = ints[4];
+				p.io = ints[5];
 				
-				readyQueue.push(*p);
+				readyQueue.push(p);
 			} else {
 #ifdef DEBUG
 				cout << "Invalid line: " << line << endl;
@@ -112,11 +112,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	int numProc = readyQueue.size();
-	unsigned int waitTime = 0;
-	unsigned int turnTime = 0;
+	unsigned long long waitTime = 0, turnTime = 0;
 
 	//do the scheduler
-	unsigned int tick = 0;
+	unsigned long long tick = 0;
 	int timeQuantum = 0;
 	int runtime = 0;
 	int sourceQ = 0;
@@ -157,6 +156,7 @@ int main(int argc, char* argv[]) {
 #ifdef DEBUG
 				cout << "Process: " << runningProcess.pid << " finished" << endl;
 #endif
+				waitTime += tick - runningProcess.arr - runningProcess.initialBurst;
 				turnTime += tick - runningProcess.arr;
 			} else {
 				if((runtime >= timeQuantum) && (sourceQ < (numQ-1))) {
@@ -188,9 +188,6 @@ int main(int argc, char* argv[]) {
 			if (i < numQ) {
 				runningProcess = queues[i].front();
 				queues[i].pop();
-			    if (i == 0){
-						waitTime += tick - runningProcess.arr - runningProcess.initialBurst;
-                }
 				sourceQ = i;
 				if(sourceQ == (numQ-1)) {
 					timeQuantum = 1;
