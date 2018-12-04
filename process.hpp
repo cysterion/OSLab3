@@ -12,6 +12,7 @@ class Process{
         int tickArrived;
         int start;
         int currentPri;
+				int ioFinish;
 	
 		void print();
 
@@ -25,8 +26,13 @@ class Process{
 		friend bool operator>(const Process& a, const Process& b) {
 			return b.arr < a.arr;
 		}
-
+	
+	class IOCompare {
+	public:
+		bool operator()(const Process &lhs, const Process &rhs) const;
+	};
 };
+
 
 
 

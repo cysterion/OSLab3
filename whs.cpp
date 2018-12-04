@@ -109,6 +109,8 @@ int main(int argc, char* argv[]) {
 	unsigned int turnTime = 0;
 	
 	//do the scheduler
+	
+	priority_queue <Process, vector<Process>, Process::IOCompare> IOQueue;
 	unsigned int tick = 0;
 	int timeQuantum = 0;
 	int runtime = 0;
@@ -150,7 +152,15 @@ int main(int argc, char* argv[]) {
 				turnTime += tick - runningProcess.arr;
 			} else {
 				
-				
+				if (runtime == timeQuantum-1 && (runningProcess.io != 0)) {
+					runningProcess.currentPri = runningProcess.pri + runningProcess.io;
+					runningProcess.ioFinish = tick + runningProcess.io;
+					IOQueue.push(runningProcess);
+					runtime = 0;
+#ifdef DEBUG
+					cout << "Sent: " << runningProcess.pid << " to IO" << endl;
+#endif
+				}
 				
 				if((runtime >= timeQuantum)) {
 
@@ -216,6 +226,21 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		
+	
+			while(!IOQueue.empty() && IOQueue.top().ioFinish == tick){
+				Process temp = IOQueue.top();
+				temp.io = 0;
+				queues[temp.currentPri].push_back(temp);
+				IOQueue.pop();
+
+#ifdef DEBUG
+				cout << "Sent: " << temp.pid << " from IO to Q: " << temp.currentPri << endl;
+#endif
+			
+			
+		}
+		
+		
 		if (readyQueue.empty()) {
 			
 			for(int i = 0; i < numQ; i++) {
@@ -230,7 +255,9 @@ int main(int argc, char* argv[]) {
 				}
 			}
 		}
-		
+#ifdef DEBUG
+		cout << tick <<endl;
+#endif
 		tick++;
 	}
 	waitTime = waitTime / numProc;

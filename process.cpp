@@ -17,6 +17,7 @@ Process::Process(int pid, int bst, int arr, int pri, int ddline, int io) {
 	this->tickArrived = 0;
 	this->start = -1;
 	this->currentPri = pri;
+	this->ioFinish = 0;
 }
 
 Process::~Process() {
@@ -25,4 +26,9 @@ Process::~Process() {
 
 void Process::print() {
 	cout << pid << ", " << burst << ", " << arr << ", " << pri << ", " << deadline << ", " << io << endl;
+}
+
+bool Process::IOCompare::operator()(const Process &lhs, const Process &rhs) const {
+
+	return lhs.io > rhs.io;
 }

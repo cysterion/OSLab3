@@ -222,7 +222,9 @@ int main(int argc, char* argv[]) {
 #endif
 			}
 		}
-
+#ifdef DEBUG
+		cout << tick <<endl;
+#endif
 		tick++;
 	}
     waitTime = waitTime / numProc;
