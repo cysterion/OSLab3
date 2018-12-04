@@ -10,6 +10,10 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+	
+//	int numQ = stoi(argv[2]);
+//	int tq = stoi(argv[3]);
+//	int aInt = stoi(argv[4]);
 
     //prompt for queues and tq
     cout << "Enter number of queues (max 5)\n";
@@ -30,7 +34,7 @@ int main(int argc, char* argv[]) {
     //set up queues
 
 
-	priority_queue<Process, vector<Process>, greater<Process>> readyQueue;
+	priority_queue<Process, vector<Process>, Process::ArrCompare> readyQueue;
 
 	deque<Process> queues [numQ];
 	for(int i = 0; i < numQ; i++){
@@ -227,10 +231,10 @@ int main(int argc, char* argv[]) {
 #endif
 		tick++;
 	}
-    waitTime = waitTime / numProc;
-    turnTime = turnTime / numProc;
-	cout << "Average Wait Time is: " << waitTime << endl;
-    cout << "Average Turnaround Time is: " << turnTime << endl;
+//    waitTime = waitTime / numProc;
+//    turnTime = turnTime / numProc;
+	cout << "Average Turn Time: " << ((float)turnTime) / numProc << endl;
+	cout << "Average Wait Time: " << ((float)waitTime) / numProc << endl;
     cout << "Total Processes: " << numProc << endl;
 	return 0;
 }

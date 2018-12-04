@@ -30,6 +30,21 @@ void Process::print() {
 }
 
 bool Process::IOCompare::operator()(const Process &lhs, const Process &rhs) const {
-
 	return lhs.io > rhs.io;
 }
+
+bool Process::ArrCompare::operator()(const Process &a, const Process &b) const {
+	return b.arr < a.arr;
+}
+
+bool Process::RTSCompare::operator()(const Process &a, const Process &b) const {
+	// arr, dd, pri, pid
+	if (b.deadline == a.deadline) {
+		if (b.pri == a.pri) {
+			return b.pid < a.pid;
+		}
+		return b.pri < a.pri;
+	}
+	return b.deadline < a.deadline;
+}
+

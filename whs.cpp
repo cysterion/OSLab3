@@ -11,10 +11,13 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 	
+//	int tq=stoi(argv[3]);
+//	int aInt = stoi(argv[4]);
+	
 	cout << "Enter Queue 1 Time Quantum\n";
 	int tq;
 	cin >> tq;
-	
+
 	cout << "Enter Aging interval\n";
 	int aInt;
 	cin >> aInt;
@@ -23,7 +26,7 @@ int main(int argc, char* argv[]) {
 	int numQ = 100;
 	
 	
-	priority_queue<Process, vector<Process>, greater<Process>> readyQueue;
+	priority_queue<Process, vector<Process>, Process::ArrCompare> readyQueue;
 	
 	deque<Process> queues [numQ];
 //	deque<Process> lowBandQs [50];
@@ -307,10 +310,10 @@ int main(int argc, char* argv[]) {
 #endif
 		tick++;
 	}
-	waitTime = waitTime / numProc;
-	turnTime = turnTime / numProc;
-	cout << "Average Wait Time is: " << waitTime << endl;
-	cout << "Average Turnaround Time is: " << turnTime << endl;
+//	waitTime = waitTime / numProc;
+//	turnTime = turnTime / numProc;
+	cout << "Average Turn Time: " << ((float)turnTime) / numProc << endl;
+	cout << "Average Wait Time: " << ((float)waitTime) / numProc << endl;
 	cout << "Total Processes: " << numProc << endl;
 	return 0;
 }

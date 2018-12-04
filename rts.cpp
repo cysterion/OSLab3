@@ -10,25 +10,25 @@
 using namespace std;
 
 void deathByHardMode(unsigned int turnTime, unsigned int waitTime, int numProc, int succeedProc) {
-	turnTime = turnTime / succeedProc;
-	waitTime = waitTime / numProc;
+//	turnTime = turnTime / succeedProc;
+//	waitTime = waitTime / numProc;
 	cout << "Number of Processes: " << numProc << endl;
 	cout << "Succeeded Proccesses: " << succeedProc << endl;
-	cout << "Average Turn Time: " << turnTime << endl;
-	cout << "Average Wait Time: " << waitTime << endl;
+	cout << "Average Turn Time: " << ((float)turnTime) / numProc << endl;
+	cout << "Average Wait Time: " << ((float)waitTime) / numProc << endl;
 	exit(-32);
 }
 
 int main(int argc, char* argv[]) {
 	
-	
+//	int type = 1;
 	cout << "Hard (0) or Soft (1)\n";
 	int type;
 	cin >> type;
 	
-	priority_queue<Process, vector<Process>, greater<Process>> readyQueue;
+	priority_queue<Process, vector<Process>, Process::ArrCompare> readyQueue;
 	
-	priority_queue<Process, vector<Process>, less<Process>> queue;
+	priority_queue<Process, vector<Process>, Process::RTSCompare> queue;
 	
 	//read in file and create processes
 	ifstream file;
@@ -149,8 +149,10 @@ int main(int argc, char* argv[]) {
 #ifdef DEBUG
 					cout << "Process " << runningProcess.pid << " failed to meet deadline" << endl;
 #endif
-					runningProcess.print();
-					cout << tick << endl;
+					turnTime += tick - runningProcess.arr;
+					waitTime += tick - runningProcess.arr - runningProcess.burst;
+					
+					
 					
 					if(type == 0){
 						deathByHardMode(turnTime, waitTime, numProc, succeedProc);
@@ -193,12 +195,12 @@ int main(int argc, char* argv[]) {
 		tick++;
 	}
 	
-	turnTime = turnTime / succeedProc;
-	waitTime = waitTime / numProc;
+//	turnTime = turnTime / numProc;
+//	waitTime = waitTime / numProc;
 	cout << "Number of Processes: " << numProc << endl;
 	cout << "Succeeded Proccesses: " << succeedProc << endl;
-	cout << "Average Turn Time: " << turnTime << endl;
-	cout << "Average Wait Time: " << waitTime << endl;
+	cout << "Average Turn Time: " << ((float)turnTime) / numProc << endl;
+	cout << "Average Wait Time: " << ((float)waitTime) / numProc << endl;
 	
 	return 0;
 }
